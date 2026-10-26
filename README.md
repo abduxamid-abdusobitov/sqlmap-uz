@@ -1,4 +1,5 @@
 # SQLMAP — O'zbekcha versiya
+TELEGRAM: https://t.me/cyber_studyorg
 
 Bu siz yuborgan `sqlmap-master.zip` asosida tayyorlangan o'zbekcha moslashtirish.
 Asos versiyasi: **1.10.10.20#dev**. Rasmiy sqlmap loyihasining alohida rasmiy relizi emas.
