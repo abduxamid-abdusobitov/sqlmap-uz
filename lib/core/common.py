@@ -4110,6 +4110,35 @@ def getDaysFromLastUpdate():
 
     return int(time.time() - os.path.getmtime(paths.SQLMAP_SETTINGS_PATH)) // (3600 * 24)
 
+def pythonBuildInfo():
+    """
+    Returns markers of non-default interpreter builds/modes (e.g. free-threading, JIT)
+
+    >>> isinstance(pythonBuildInfo(), str)
+    True
+    """
+
+    import sysconfig
+
+    retVal = []
+
+    # Note: free-threading builds compile in their own GC and deferred reference counting (e.g. https://github.com/python/cpython/issues/160682, where a still
+    # running function gets collected), both of which stay in play even when the GIL itself got re-enabled in runtime, hence checking the build and not only the state
+    try:
+        if sysconfig.get_config_var("Py_GIL_DISABLED"):
+            retVal.append("free-threading" if not sys._is_gil_enabled() else "free-threading with GIL")
+    except:
+        pass
+
+    try:
+        if sys._jit.is_enabled():
+            retVal.append("JIT")
+    except:
+        if os.getenv("PYTHON_JIT") == '1':
+            retVal.append("JIT")
+
+    return ", ".join(retVal)
+
 def unhandledExceptionMessage():
     """
     Returns detailed message about occurred unhandled exception
@@ -4121,6 +4150,7 @@ def unhandledExceptionMessage():
     from lib.core.revision import getRevisionNumber      # Note: not in the header because of the circular import
 
     revision = getRevisionNumber()
+    buildInfo = pythonBuildInfo()
 
     errMsg = "%s da qayta ishlanmagan istisno yuz berdi. Qayta urinib ko'ring, " % VERSION_STRING
     errMsg += 'rasmiy GitHub dagi eng yangi ishlab chiqish versiyasida '
@@ -4130,7 +4160,7 @@ def unhandledExceptionMessage():
     errMsg += "ma'lumotlar bilan. Ishlab chiquvchilar xatoni takrorlash va tuzatishga urinib, "
     errMsg += 'sizga javob beradilar\n'
     errMsg += 'Ishlayotgan versiya: %s%s\n' % (VERSION_STRING[VERSION_STRING.find('/') + 1:], (" (%s)" % revision) if revision else "")
-    errMsg += 'Python versiyasi: %s\n' % PYVERSION
+    errMsg += 'Python versiyasi: %s%s\n' % (PYVERSION, (" (%s)" % buildInfo) if buildInfo else "")
     errMsg += 'Operatsion tizim: %s\n' % platform.platform()
     errMsg += 'Buyruq qatori: %s\n' % re.sub(r".+?\bsqlmap\.py\b", "sqlmap.py", getUnicode(" ".join(sys.argv), encoding=getattr(sys.stdin, "encoding", None)))
     errMsg += 'Usul: %s\n' % (enumValueToNameLookup(PAYLOAD.TECHNIQUE, getTechnique()) if getTechnique() is not None else ("DIRECT" if conf.get("direct") else None))
@@ -5665,16 +5695,20 @@ def parseRequestFile(reqFile, checkParams=True):
             if re.search(BURP_XML_HISTORY_REGEX, content, re.I | re.S):
                 reqResList = []
                 for match in re.finditer(BURP_XML_HISTORY_REGEX, content, re.I | re.S):
-                    port, request = match.groups()
+                    port, protocol, request = match.groups()
+                    protocol = (protocol or "").lower()
                     try:
                         request = decodeBase64(request, binary=False)
                     except (binascii.Error, TypeError):
                         continue
                     _ = re.search(r"%s:.+" % re.escape(HTTP_HEADER.HOST), request)
                     if _:
-                        host = _.group(0).strip()
-                        if not re.search(r":\d+\Z", host) and int(port) != 80:
-                            request = request.replace(host, "%s:%d" % (host, int(port)))
+                        host = value = _.group(0).strip()
+                        if not re.search(r":\d+\Z", host) and int(port) != (443 if protocol == "https" else 80):
+                            value = "%s:%d" % (value, int(port))
+                        if protocol and "://" not in value:  # Note: item's <protocol> (as the port alone can't tell e.g. HTTPS on 8443)
+                            value = re.sub(r"\A([^:]+:\s*)", r"\g<1>%s://" % protocol, value)
+                        request = request.replace(host, value)
                     reqResList.append(request)
             else:
                 reqResList = [content]

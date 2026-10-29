@@ -1,7 +1,7 @@
 # SQLMAP — O'zbekcha versiya
 
 Bu siz yuborgan `sqlmap-master.zip` asosida tayyorlangan o'zbekcha moslashtirish.
-Asos versiyasi: **1.10.10.20#dev**. Rasmiy sqlmap loyihasining alohida rasmiy relizi emas.
+Asos versiyasi: **1.10.10.29#dev**. Rasmiy sqlmap loyihasining alohida rasmiy relizi emas.
 
 ## Windowsda ishga tushirish
 
@@ -93,16 +93,26 @@ O'zbekcha savol matnidan parcha bilan moslashtirish ham qo'llanadi.
 
 ## Yangilash haqida
 
-`--update` asl sqlmap yangilash mexanizmini chaqiradi. U rasmiy inglizcha fayllarni yuklab,
-ushbu mahalliy tarjimani almashtirishi mumkin. Yangilashdan oldin o'zbekcha arxivni saqlab qo'ying.
+`python sqlmap.py --update` SQLMAP-UZ repozitoriysining `main` branchidan yangilaydi.
+O'zbekcha tarjima saqlanadi. Mahalliy o'zgarishlar bo'lsa, avval commit yoki stash qilish kerak.
+Yangilash faqat `--ff-only` bilan bajariladi: tarixlar ajralgan bo'lsa, Git to'xtaydi.
+ZIP orqali o'rnatilgan nusxadagi fayllar o'chirilmaydi; yangi papkaga klonlash ko'rsatmasi chiqadi.
+
+```sh
+git clone https://github.com/abduxamid-abdusobitov/sqlmap-uz.git
+cd sqlmap-uz
+python sqlmap.py -hh
+```
+
+2026-10-29 yangilanishlari: `UZBEK/YANGILANISHLAR.md`.
 
 ## Tekshiruvlar
 
 Sinov tafsilotlari: `UZBEK/TEKSHIRUV.md`.
 
-- 2 742 ta unittest: xatosiz, 15 tasi o'tkazib yuborilgan.
+- 2 755 ta unittest: xatosiz, 15 tasi o'tkazib yuborilgan.
 - Sqlmapning ichki `--smoke-test` sinovi muvaffaqiyatli.
-- 284 ta CLI parametr ta'rifi asl nusxa bilan bir xil.
+- 275 ta CLI parametr ta'rifi asl nusxa bilan bir xil.
 - `data/` ichidagi 107 ta fayl va `thirdparty/` ichidagi 72 ta fayl baytma-bayt bir xil.
 - Sozlash faylining qiymatlari va bo'lim/kalit nomlari saqlangan.
 

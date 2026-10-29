@@ -628,7 +628,7 @@ def checkSqlInjection(place, parameter, value):
                                 # A real boolean injection's TRUE condition reproduces the normal page, so this
                                 # status-code asymmetry is the classic false positive - refuse it here.
                                 if not kb.negativeLogic and trueCode in WAF_BLOCK_HTTP_CODES and (falseCode or 0) < 400 and (kb.heuristicCode or 200) < 400:
-                                    warnMsg = "%sparametr '%s' ning TRUE/FALSE javoblari faqat bloklangan HTTP %d va %d holatlari bilan farqlanadi; " % ("%s " % paramType if paramType != parameter else "", parameter, trueCode, falseCode)
+                                    warnMsg = "%sparametr '%s' ning TRUE/FALSE javoblari faqat bloklangan HTTP %d va %s holatlari bilan farqlanadi; " % ("%s " % paramType if paramType != parameter else "", parameter, trueCode, falseCode)
                                     warnMsg += "bu SQL-inyeksiyadan ko'ra WAF/IPS blokiga xos; ehtimoliy yolg'on ijobiy natija o'tkazib yuborildi"
                                     logger.warning(warnMsg)
                                     injectable = False
