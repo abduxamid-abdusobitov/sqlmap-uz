@@ -22,7 +22,8 @@ class UzbekText(_text):
         return UzbekText(self.english + _original(other), _text.__add__(self, other))
 
     def __radd__(self, other):
-        return UzbekText(_original(other) + self.english, _text.__add__(other, self))
+        # Python 2 unicode.__add__ requires a unicode receiver even for ASCII str prefixes.
+        return UzbekText(_original(other) + self.english, _text.__add__(_text(other), self))
 
     def __mod__(self, values):
         return UzbekText(self.english % _original(values), _text.__mod__(self, values))

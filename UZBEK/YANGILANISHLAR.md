@@ -24,6 +24,7 @@ SQLMAP-UZ asosi `1.10.10.20#dev` dan `1.10.10.29#dev` ga yangilandi.
 - Yangilashdan oldin mahalliy tahrirlar tekshiriladi. `git checkout .` olib tashlandi.
 - Faqat fast-forward yangilashga ruxsat beriladi; ajralgan tarix majburan almashtirilmaydi.
 - ZIP nusxasini yangilash uchun fayllarni o'chiradigan yo'l olib tashlandi.
+- PyPy/Python 2.7 da oddiy satrni o'zbekcha savolga qo'shishdagi Unicode xatosi tuzatildi.
 - GitHub Actions `master` o'rniga ushbu reponing `main` branchida ishlaydi.
 - Ishlatilmayotgan test importi olib tashlandi; pyflakes tekshiruvi toza.
 - O'zgargan xabarlar tarjima katalogida ham yangilandi.
