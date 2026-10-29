@@ -457,7 +457,6 @@
   "invalid value": "noto'g'ri qiymat",
   "skipping test '%s' because the heuristic ": "'%s' testi o'tkazib yuborildi, chunki evristik ",
   "could be '%s'": "'%s' bo'lishi mumkin",
-  "%sparameter '%s' TRUE/FALSE responses differ only by a blocked HTTP %d vs %d status, ": "%sparametr '%s' ning TRUE/FALSE javoblari faqat bloklangan HTTP %d va %d holatlari bilan farqlanadi; ",
   "%sparameter '%s' appears to be '%s' injectable ": "%sparametr '%s' '%s' inyeksiyasiga zaif ko'rinadi ",
   "problem occurred most likely because the ": "muammoning ehtimoliy sababi: ",
   "server hasn't recovered as expected from the ": "server kutilganidek tiklanmadi, sabab ",
@@ -1820,7 +1819,6 @@
   "repository at '%s'. If the exception persists, please open a new issue ": "'%s' repozitoriysidan. Istisno qolsa, yangi xato xabarini oching: ",
   "at '%s' ": "'%s' manzilida ",
   "Running version: %s%s\n": "Ishlayotgan versiya: %s%s\n",
-  "Python version: %s\n": "Python versiyasi: %s\n",
   "Operating system: %s\n": "Operatsion tizim: %s\n",
   "Command line: %s\n": "Buyruq qatori: %s\n",
   "Technique: %s\n": "Usul: %s\n",
@@ -3407,5 +3405,7 @@
   "on MonetDB it is not possible to enumerate the user roles": "MonetDB da foydalanuvchi rollarini olish mumkin emas",
   "on MonetDB it is not possible to enumerate the hostname": "MonetDB da xost nomini olish mumkin emas",
   "on MonetDB it is not possible to execute commands": "MonetDB da buyruqlarni bajarish mumkin emas",
-  "on MonetDB it is not possible to establish an ": "MonetDB da ulanish o'rnatib bo'lmaydi: "
+  "on MonetDB it is not possible to establish an ": "MonetDB da ulanish o'rnatib bo'lmaydi: ",
+  "%sparameter '%s' TRUE/FALSE responses differ only by a blocked HTTP %d vs %s status, ": "%sparametr '%s' ning TRUE/FALSE javoblari faqat bloklangan HTTP %d va %s holatlari bilan farqlanadi; ",
+  "Python version: %s%s\n": "Python versiyasi: %s%s\n"
 }

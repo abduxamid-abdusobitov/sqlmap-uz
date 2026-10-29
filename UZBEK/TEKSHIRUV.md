@@ -1,27 +1,34 @@
 # Tekshiruv natijalari
 
-Muhit: Linux, Python 3.12.14. Sana: 2026-10-26.
+Muhit: Linux, Python 3.12. Sana: 2026-10-29.
+Upstream: `c42ebd7acf47c88b6407995dd9842a2eb5d6534d` (`1.10.10.29#dev`).
 
 ## Natija
 
-- `python -m unittest discover -s tests -q`: 2 742 ta test, OK, 15 skipped.
+- `python -m unittest discover -s tests -q`: 2 755 test, OK, 15 skipped.
 - `python sqlmap.py --smoke-test`: MUVAFFAQIYATLI.
-- `python sqlmap.py -h`, `-hh`, `--version`, `--list-tampers`, `sqlmapapi.py -h`: bajarildi.
+- `python sqlmap.py --doc-test`: MUVAFFAQIYATLI.
+- `python sqlmap.py --payload-lint`: 51 037 payload, 31/31 DBMS, 0 xato.
+- Pyflakes: toza (CI kabi `redefines` xabarlari chiqarib tashlangan).
 - Barcha Python manba fayllari kompilyatsiya tekshiruvidan o'tdi.
-- 284 ta argument/parametrning flag, dest, action, type, metavar va standart sozlamalari asl nusxaga mos.
-- `data/`: 107 fayl o'zgarishsiz. `thirdparty/`: 72 fayl o'zgarishsiz.
-- `LICENSE`: o'zgarishsiz.
-- `sqlmap.conf`: bo'limlar, kalitlar va qiymatlar tengligi INI tahlilchisi orqali tekshirildi.
+- AST orqali tekshirilgan 275 ta CLI parametr ta'rifi (help matnidan tashqari) yangi original bilan teng.
+- `data/`: 107 fayl; `thirdparty/`: 72 fayl yangi original bilan baytma-bayt teng.
+- `sqlmap.conf`: bo'limlar, kalitlar va qiymatlar yangi original bilan teng.
+- 3 409 ta tarjima katalogi yozuvida format belgilari tekshirildi.
 
-## Tarjimaga oid testlar
+## Regressiya testlari
 
-O'zbekcha yordam, Y/N standartlari, inglizcha `--answers` kalitlari, o'zbekcha kalitlar,
-savollarga qo'shilgan dinamik qiymatlar va satrlarni birlashtirish tekshirildi.
-Asl testlardagi inglizcha chiqish matnini tekshiruvchi kutishlar o'zbekcha ko'rinishga
-moslandi. Funksional tekshiruvlar o'chirilmadi.
+Oldingi o'zbekcha yordam, Y/N javoblari, inglizcha va o'zbekcha `--answers` kalitlari
+hamda dinamik qiymatlarning saqlanishi testlari qolgan.
+
+Yangilashga oid 8 ta yangi offline test: o'chirilgan update rejimi, ZIP fayllarini saqlash,
+mahalliy tahrirlarni saqlash, SQLMAP-UZ/main va `--ff-only` tanlovi, worktree `.git` fayli,
+Git status xatosi, ajralgan tarix va Git o'rnatilmagan holat.
+Upstreamdan Burp XML va proxy autentifikatsiyasi regressiya testlari ham olindi.
 
 ## Chegaralar
 
-Windowsda amaliy ishga tushirish va grafik interfeysning vizual tekshiruvi bajarilmadi.
-O'tkazib yuborilgan testlar ixtiyoriy bog'liqlik yoki maxsus muhit talab qiladi.
-Tashqi saytlarga skanerlash bajarilmadi.
+Windows/Python 3.14, PyPy 2.7 va grafik interfeys bu lokal muhitda amaliy tekshirilmadi.
+15 ta test ixtiyoriy bog'liqlik yoki maxsus muhit talab qilgani uchun o'tkazib yuborildi.
+Tashqi saytlarga skanerlash bajarilmadi. Yangilash testlari Git natijalarini taqlid qiladi;
+haqiqiy tarmoq orqali foydalanuvchi nusxasini yangilamaydi.

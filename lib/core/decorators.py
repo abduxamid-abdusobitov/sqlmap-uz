@@ -9,6 +9,7 @@ import functools
 import threading
 
 from lib.core.datatype import LRUDict
+from lib.core.datatype import cacheLock
 from lib.core.settings import MAX_CACHE_ITEMS
 from lib.core.threads import getCurrentThreadData
 
@@ -40,7 +41,7 @@ def cachedmethod(f):
     """
 
     _cache[f] = LRUDict(capacity=MAX_CACHE_ITEMS)
-    _method_locks[f] = threading.RLock()
+    _method_locks[f] = cacheLock(reentrant=True)
 
     def _freeze(val):
         if isinstance(val, (list, set, tuple)):
@@ -61,7 +62,10 @@ def cachedmethod(f):
 
             with lock:
                 if key in cache:
-                    return cache[key]
+                    try:
+                        return cache[key]
+                    except KeyError:    # Note: evicted in between (unlocked on Python 3)
+                        pass
 
         except TypeError:
             # Note: fallback (slow-path) for unhashable arguments
@@ -73,7 +77,10 @@ def cachedmethod(f):
 
                 with lock:
                     if key in cache:
-                        return cache[key]
+                        try:
+                            return cache[key]
+                        except KeyError:
+                            pass
             except TypeError:
                 # Note: genuinely uncacheable arguments; skip caching altogether
                 return f(*args, **kwargs)

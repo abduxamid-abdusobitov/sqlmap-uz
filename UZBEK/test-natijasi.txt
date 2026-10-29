@@ -1,4 +1,6 @@
-----------------------------------------------------------------------
-Ran 2742 tests in 41.324s
-
-OK (skipped=15)
+2026-10-29 | Linux / Python 3.12
+2755 tests: OK (skipped=15)
+smoke-test: OK
+doc-test: OK
+payload-lint: 51037 payloads, 31/31 DBMS, 0 failures
+pyflakes: clean

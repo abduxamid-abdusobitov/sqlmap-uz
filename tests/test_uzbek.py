@@ -9,7 +9,7 @@ from _testutils import bootstrap
 bootstrap()
 from lib.core.uzbek import ut
 from lib.core.common import readInput
-from lib.core.data import conf, kb
+from lib.core.data import conf
 
 class UzbekPromptTests(unittest.TestCase):
     def setUp(self):
